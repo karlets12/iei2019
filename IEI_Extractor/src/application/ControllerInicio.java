@@ -256,8 +256,8 @@ public class ControllerInicio {
 					if (precioActPcComponentes > 50.0) {
 						Smartphone smart = new Smartphone(nombre, precio, vendedor);
 						smartphones.add(smart);
-						System.out.println(contPc + ": " + "Nombre: " + nombre + ", Precio: " + precio);
-						contPc++;
+						//System.out.println(contPc + ": " + "Nombre: " + nombre + ", Precio: " + precio);
+						//contPc++;
 					}
 				}
 				j++;
