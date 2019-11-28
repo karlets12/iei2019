@@ -3,16 +3,14 @@ package application;
 public class Smartphone {
  
  public String nombre;
- public String precioActual;
- public String precioAnterior;
+ public String precio;
  public String vendedor;
  
  
- public Smartphone(String nombre, String precioActual,String precioAnterior, String vendedor)
+ public Smartphone(String nombre, String precio, String vendedor)
  {
      this.nombre = nombre;
-     this.precioActual = precioActual;
-     this.precioAnterior = precioAnterior;
+     this.precio = precio;
      this.vendedor=vendedor;
  }
 
@@ -27,23 +25,13 @@ public void setNombre(String nombre) {
 }
 
 
-public String getPrecioActual() {
-	return precioActual;
+public String getPrecio() {
+	return precio;
 }
 
 
-public void setPrecioActual(String precioActual) {
-	this.precioActual = precioActual;
-}
-
-
-public String getPrecioAnterior() {
-	return precioAnterior;
-}
-
-
-public void setPrecioAnterior(String precioAnterior) {
-	this.precioAnterior = precioAnterior;
+public void setPrecio(String precio) {
+	this.precio = precio;
 }
 
 
@@ -55,4 +43,6 @@ public String getVendedor() {
 public void setVendedor(String vendedor) {
 	this.vendedor = vendedor;
 }
+
+
 }
