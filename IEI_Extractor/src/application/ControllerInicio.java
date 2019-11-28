@@ -25,6 +25,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.*;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -44,11 +45,11 @@ public class ControllerInicio {
 	@FXML
 	private TableView<Smartphone> tabla;
 	@FXML
-	private TableColumn<String, Smartphone> ColNombre;
+	private TableColumn<Smartphone,String> ColNombre;
 	@FXML
-	private TableColumn<String, Smartphone> ColPrecio;
+	private TableColumn<Smartphone,String> ColPrecio;
 	@FXML
-	private TableColumn<String, Smartphone> ColVendedor;
+	private TableColumn<Smartphone,String> ColVendedor;
 
 	protected Stage stage;
 
@@ -62,6 +63,7 @@ public class ControllerInicio {
 	public double precioActPcComponentes;
 	public double precioAntPcComponentes;
 	public double precioFNAC;
+	
 
 	public void initialize() {
 		stage = new Stage(StageStyle.DECORATED);
@@ -133,7 +135,7 @@ public class ControllerInicio {
 				try {
 					nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
 					precio = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price']")).getText();
-					precioActAmazon = Double.parseDouble(precio.replace("€", "").replace(",", "."));
+					precioActAmazon = Double.parseDouble(precio.replace("ï¿½", "").replace(",", "."));
 					try {
 						nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
 						precio = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price a-text-price']"))
@@ -141,12 +143,12 @@ public class ControllerInicio {
 					} catch (Exception e) {
 						nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
 						precioAux = precio;
-						precioAntAmazon = Double.parseDouble(precioAux.replace("€", "").replace(",", "."));
+						precioAntAmazon = Double.parseDouble(precioAux.replace("ï¿½", "").replace(",", "."));
 					}
 				} catch (Exception e) {
 					precio = listaElementos.get(i).findElement(By.cssSelector("span[class='a-color-base']")).getText();
 					precioAux = precio;
-					precioAntAmazon = Double.parseDouble(precioAux.replace("€", "").replace(",", "."));
+					precioAntAmazon = Double.parseDouble(precioAux.replace("ï¿½", "").replace(",", "."));
 				}
 				if (nombre.trim().toLowerCase().contains(modelo.toLowerCase())
 						&& nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
@@ -161,6 +163,8 @@ public class ControllerInicio {
 				}
 				j++;
 			}
+			
+			llenarTabla();
 
 		}
 		int contFNAC = 1;
@@ -206,7 +210,7 @@ public class ControllerInicio {
 							.findElement(By
 									.xpath("/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[2]/div/p[1]/a"))
 							.getText();
-					precioFNAC = Double.parseDouble(precio.replace("€", "").replace(",", "."));
+					precioFNAC = Double.parseDouble(precio.replace("ï¿½", "").replace(",", "."));
 				} catch (Exception e) {
 
 					precio = listaElementos.get(i).findElement(By.xpath("/html/body/div[3]/div/div[7]/div/div[" + j
@@ -215,7 +219,7 @@ public class ControllerInicio {
 							.findElement(By
 									.xpath("/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[2]/div/p[1]/a"))
 							.getText();
-					precioFNAC = Double.parseDouble(precio.replace("€", "").replace(",", "."));
+					precioFNAC = Double.parseDouble(precio.replace("ï¿½", "").replace(",", "."));
 
 				}
 
@@ -233,6 +237,8 @@ public class ControllerInicio {
 
 				j++;
 			}
+			
+			llenarTabla();
 
 		}
 		int contPc = 1;
@@ -275,7 +281,7 @@ public class ControllerInicio {
 				precio = listaElementos.get(i).findElement(By
 						.xpath("/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[3]"))
 						.getText();
-				precioActPcComponentes = Double.parseDouble(precio.replace("€", "").replace(",", "."));
+				precioActPcComponentes = Double.parseDouble(precio.replace("ï¿½", "").replace(",", "."));
 				nombre = listaElementos.get(i).findElement(By
 						.xpath("/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[1]"))
 						.getText();
@@ -293,7 +299,8 @@ public class ControllerInicio {
 				}
 				j++;
 			}
-
+	
+			llenarTabla();
 		}
 	}
 
@@ -312,9 +319,13 @@ public class ControllerInicio {
 			// System.out.println("Timeout waiting for Page Load Request to complete.");
 		}
 	}
-
-	public static void llenarTabla(ObservableList<Smartphone> listaSmartphone) {
-
+	
+	public  void llenarTabla() {
+		ObservableList<Smartphone> listaSmart = FXCollections.observableArrayList(smartphones);
+		ColNombre.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
+		ColPrecio.setCellValueFactory(new PropertyValueFactory<>("Precio"));
+		ColVendedor.setCellValueFactory(new PropertyValueFactory<>("Vendedor"));
+		tabla.setItems(listaSmart);
 	}
 	/////////////
 }
