@@ -25,6 +25,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.*;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -44,11 +45,11 @@ public class ControllerInicio {
 	@FXML
 	private TableView<Smartphone> tabla;
 	@FXML
-	private TableColumn<String,Smartphone> ColNombre;
+	private TableColumn<Smartphone,String> ColNombre;
 	@FXML
-	private TableColumn<String,Smartphone> ColPrecio;
+	private TableColumn<Smartphone,String> ColPrecio;
 	@FXML
-	private TableColumn<String,Smartphone> ColVendedor;
+	private TableColumn<Smartphone,String> ColVendedor;
 
 	protected Stage stage;
 
@@ -62,6 +63,7 @@ public class ControllerInicio {
 	public double precioActPcComponentes;
 	public double precioAntPcComponentes;
 	public double precioFNAC;
+	
 
 	public void initialize() {
 		stage = new Stage(StageStyle.DECORATED);
@@ -126,7 +128,7 @@ public class ControllerInicio {
 				try {
 					nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
 					precioActual = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price']")).getText();
-					precioActAmazon= Double.parseDouble(precioActual.replace("ï¿½", "").replace(",","."));
+					precioActAmazon= Double.parseDouble(precioActual.replace("€", "").replace(",","."));
 					//System.out.println("Nombre:" + nombre + ", Precio:" + precio);
 					try {
 						nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
@@ -135,13 +137,13 @@ public class ControllerInicio {
 					}catch(Exception e) {
 						nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
 						precioAnterior=precioActual;
-						precioAntAmazon= Double.parseDouble(precioAnterior.replace("ï¿½", "").replace(",","."));
+						precioAntAmazon= Double.parseDouble(precioAnterior.replace("€", "").replace(",","."));
 						//System.out.println("Nombre:" + nombre + ", Precio:" + precioAnterior);
 					}
 				}catch(Exception e) {
 					precioActual=listaElementos.get(i).findElement(By.cssSelector("span[class='a-color-base']")).getText();
 					precioAnterior=precioActual;
-					precioAntAmazon= Double.parseDouble(precioAnterior.replace("ï¿½", "").replace(",","."));
+					precioAntAmazon= Double.parseDouble(precioAnterior.replace("€", "").replace(",","."));
 				}
 				
 					if(nombre.trim().toLowerCase().contains(modelo.toLowerCase()) && nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
@@ -152,6 +154,8 @@ public class ControllerInicio {
 					}
 					j++;
 			}
+			
+			llenarTabla();
 
 		}
 		if (fnacCheck.isSelected()) {
@@ -191,14 +195,14 @@ public class ControllerInicio {
 						"/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[3]/div/div/div/div/div[1]/a/strong"))
 						.getText();
 				nombre= listaElementos.get(i).findElement(By.xpath("/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[2]/div/p[1]/a")).getText();
-				precioFNAC= Double.parseDouble(precio.replace("ï¿½", "").replace(",","."));
+				precioFNAC= Double.parseDouble(precio.replace("€", "").replace(",","."));
 				}catch(Exception e) {
 					
 					precio = listaElementos.get(i).findElement(By.xpath(
 							"/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[3]/div/div/div/div[1]/a/strong"))
 							.getText();
 					nombre= listaElementos.get(i).findElement(By.xpath("/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[2]/div/p[1]/a")).getText();
-					precioFNAC= Double.parseDouble(precio.replace("ï¿½", "").replace(",","."));
+					precioFNAC= Double.parseDouble(precio.replace("€", "").replace(",","."));
 					
 				}
 				if(nombre.trim().toLowerCase().contains(modelo.toLowerCase()) && nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
@@ -211,6 +215,8 @@ public class ControllerInicio {
 				
 				j++;
 			}
+			
+			llenarTabla();
 
 		}
 		if (pcComponentsCheck.isSelected()) {
@@ -253,7 +259,7 @@ public class ControllerInicio {
 				precio = listaElementos.get(i).findElement(By.xpath(
 						"/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[3]"))
 						.getText();
-				precioActPcComponentes = Double.parseDouble(precio.replace("ï¿½", "").replace(",", "."));
+				precioActPcComponentes = Double.parseDouble(precio.replace("€", "").replace(",", "."));
 				nombreTelf = listaElementos.get(i).findElement(By.xpath("/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[1]")).getText();
 				
 				
@@ -267,7 +273,8 @@ public class ControllerInicio {
 				}
 				j++;
 			}
-
+	
+			llenarTabla();
 		}
 	}
 
@@ -287,7 +294,11 @@ public class ControllerInicio {
 		}
 	}
 	
-	public static void llenarTabla(ObservableList<Smartphone> listaSmartphone) {
-		
+	public  void llenarTabla() {
+		ObservableList<Smartphone> listaSmart = FXCollections.observableArrayList(smartphones);
+		ColNombre.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
+		ColPrecio.setCellValueFactory(new PropertyValueFactory<>("Precio"));
+		ColVendedor.setCellValueFactory(new PropertyValueFactory<>("Vendedor"));
+		tabla.setItems(listaSmart);
 	}
 }

@@ -1,47 +1,49 @@
 package application;
 
+import javafx.beans.property.SimpleStringProperty;
+
 public class Smartphone {
  
- public String nombre;
- public String precio;
- public String vendedor;
+ public SimpleStringProperty nombre;
+ public SimpleStringProperty precio;
+ public SimpleStringProperty vendedor;
  
  
  public Smartphone(String nombre, String precio, String vendedor)
  {
-     this.nombre = nombre;
-     this.precio = precio;
-     this.vendedor=vendedor;
+     this.nombre = new SimpleStringProperty(nombre);
+     this.precio = new SimpleStringProperty(precio);
+     this.vendedor=new SimpleStringProperty(vendedor);
  }
 
 
 public String getNombre() {
-	return nombre;
+	return nombre.get();
 }
 
 
 public void setNombre(String nombre) {
-	this.nombre = nombre;
+	this.nombre = new SimpleStringProperty(nombre);
 }
 
 
 public String getPrecio() {
-	return precio;
+	return precio.get();
 }
 
 
 public void setPrecio(String precio) {
-	this.precio = precio;
+	this.precio = new SimpleStringProperty(precio);
 }
 
 
 public String getVendedor() {
-	return vendedor;
+	return vendedor.get();
 }
 
 
 public void setVendedor(String vendedor) {
-	this.vendedor = vendedor;
+	this.vendedor = new SimpleStringProperty(vendedor);
 }
 
 
