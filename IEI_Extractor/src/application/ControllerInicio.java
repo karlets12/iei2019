@@ -316,4 +316,5 @@ public class ControllerInicio {
 	public static void llenarTabla(ObservableList<Smartphone> listaSmartphone) {
 
 	}
+	/////////////
 }
