@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ControllerInicio">
+   <children>
+      <ComboBox fx:id="comboBox" layoutX="121.0" layoutY="36.0" prefHeight="25.0" prefWidth="403.0" />
+      <TextField fx:id="input" layoutX="121.0" layoutY="77.0" prefHeight="25.0" prefWidth="403.0" />
+      <CheckBox fx:id="amazonCheck" layoutX="121.0" layoutY="127.0" mnemonicParsing="false" text="Amazon" />
+      <CheckBox fx:id="fnacCheck" layoutX="121.0" layoutY="160.0" mnemonicParsing="false" text="Fnac" />
+      <CheckBox fx:id="pcComponentsCheck" layoutX="121.0" layoutY="191.0" mnemonicParsing="false" text="Pc Componentes" />
+      <Text layoutX="65.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Marca:" />
+      <Text layoutX="64.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Modelo:" />
+      <Button fx:id="buttonBuscar" layoutX="75.0" layoutY="311.0" mnemonicParsing="false" onAction="#botonBuscar" text="Buscar" />
+   </children>
+</AnchorPane>
