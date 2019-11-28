@@ -41,12 +41,20 @@ public class ControllerInicio {
 	private CheckBox pcComponentsCheck;
 	@FXML
 	private Button buttonBuscar;
+	@FXML
+	private TableView<Smartphone> tabla;
+	@FXML
+	private TableColumn<String,Smartphone> ColNombre;
+	@FXML
+	private TableColumn<String,Smartphone> ColPrecio;
+	@FXML
+	private TableColumn<String,Smartphone> ColVendedor;
 
 	protected Stage stage;
 
 	public String marca = "";
 	public String modelo = "";
-	public String telf = "teléfono móvil";
+	public String telf = "telï¿½fono mï¿½vil";
 	public Double precio;
 	public ArrayList<Smartphone> smartphones = new ArrayList<Smartphone>();
 	public double precioActAmazon;
@@ -118,19 +126,19 @@ public class ControllerInicio {
 					try {
 						nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
 						precio = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price']")).getText();
-						precioActAmazon= Double.parseDouble(precio.replace("€", "").replace(",","."));
+						precioActAmazon= Double.parseDouble(precio.replace("ï¿½", "").replace(",","."));
 						try {
 							nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
 							precio = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price a-text-price']")).getText();
 						}catch(Exception e) {
 							nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
 							precioAux=precio;
-							precioAntAmazon= Double.parseDouble(precioAux.replace("€", "").replace(",","."));
+							precioAntAmazon= Double.parseDouble(precioAux.replace("ï¿½", "").replace(",","."));
 						}
 					}catch(Exception e) {
 						precio=listaElementos.get(i).findElement(By.cssSelector("span[class='a-color-base']")).getText();
 						precioAux=precio;
-						precioAntAmazon= Double.parseDouble(precioAux.replace("€", "").replace(",","."));
+						precioAntAmazon= Double.parseDouble(precioAux.replace("ï¿½", "").replace(",","."));
 					}
 						if(nombre.trim().toLowerCase().contains(modelo.toLowerCase()) && nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
 							if(precioAntAmazon > 50 && precioActAmazon>50) {
@@ -182,14 +190,14 @@ public class ControllerInicio {
 						"/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[3]/div/div/div/div/div[1]/a/strong"))
 						.getText();
 				nombre= listaElementos.get(i).findElement(By.xpath("/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[2]/div/p[1]/a")).getText();
-				precioFNAC= Double.parseDouble(precio.replace("€", "").replace(",","."));
+				precioFNAC= Double.parseDouble(precio.replace("ï¿½", "").replace(",","."));
 				}catch(Exception e) {
 					
 					precio = listaElementos.get(i).findElement(By.xpath(
 							"/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[3]/div/div/div/div[1]/a/strong"))
 							.getText();
 					nombre= listaElementos.get(i).findElement(By.xpath("/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[2]/div/p[1]/a")).getText();
-					precioFNAC= Double.parseDouble(precio.replace("€", "").replace(",","."));
+					precioFNAC= Double.parseDouble(precio.replace("ï¿½", "").replace(",","."));
 					
 				}
 				
@@ -215,7 +223,7 @@ public class ControllerInicio {
 			// BUSCADOR
 			WebElement buscadorGoogle = driver.findElement(By.name("query"));
 			// CADENA
-			String busqueda = "móvil " + marca + " " + modelo + " libre";
+			String busqueda = "mï¿½vil " + marca + " " + modelo + " libre";
 			buscadorGoogle.sendKeys(busqueda);
 			buscadorGoogle.submit();
 			// CONDICION ESPERA
@@ -229,7 +237,7 @@ public class ControllerInicio {
 			Thread.sleep(4000);
 			List<WebElement> listaElementos = driver.findElements(By.xpath("//*[contains(@class, 'ais-Hits')]"));
 
-			System.out.println("Número de elementos de la lista: " + listaElementos.size());
+			System.out.println("Nï¿½mero de elementos de la lista: " + listaElementos.size());
 			// ARTICULOS
 			String precio = "";
 
@@ -247,7 +255,7 @@ public class ControllerInicio {
 				precio = listaElementos.get(i).findElement(By.xpath(
 						"/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[3]"))
 						.getText();
-				precioActPcComponentes = Double.parseDouble(precio.replace("€", "").replace(",", "."));
+				precioActPcComponentes = Double.parseDouble(precio.replace("ï¿½", "").replace(",", "."));
 				nombre = listaElementos.get(i).findElement(By.xpath("/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[1]")).getText();
 				
 				
@@ -280,5 +288,9 @@ public class ControllerInicio {
 		} catch (Throwable error) {
 			//System.out.println("Timeout waiting for Page Load Request to complete.");
 		}
+	}
+	
+	public static void llenarTabla(ObservableList<Smartphone> listaSmartphone) {
+		
 	}
 }
