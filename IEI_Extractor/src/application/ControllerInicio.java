@@ -55,7 +55,7 @@ public class ControllerInicio {
 
 	public String marca = "";
 	public String modelo = "";
-	public String telf = "telï¿½fono mï¿½vil";
+	public String telf = "telefono mï¿½vil";
 	public Double precio;
 	public ArrayList<Smartphone> smartphones = new ArrayList<Smartphone>();
 	public double precioActAmazon;
@@ -69,7 +69,6 @@ public class ControllerInicio {
 		stage = new Stage(StageStyle.DECORATED);
 		stage.setTitle("BUSCADOR");
 		cargarComboMarcas();
-		// obtener el valor del combo:
 	}
 
 	private void cargarComboMarcas() {
@@ -92,11 +91,20 @@ public class ControllerInicio {
 		marca = comboBox.getValue();
 		modelo = input.getText();
 		compruebaCheckBox(marca, modelo);
+		
+		//PRUEBAS
+		Thread.sleep(20000);
+		for(int u=0; u<smartphones.size();u++) {
+			System.out.println(u +": "+ "NOMBRE: " +smartphones.get(u).getNombre()+"\n" 
+									+ "VENDEDOR:" + smartphones.get(u).getVendedor() + "\n"
+									+ "PRECIO: " +smartphones.get(u).getPrecio()+ "\n");
+		}
+		
 
 	}
 
-
-	 public void compruebaCheckBox(String marca, String modelo) throws InterruptedException {
+	public void compruebaCheckBox(String marca, String modelo) throws InterruptedException {
+		int contAmazon = 1;
 		if (amazonCheck.isSelected()) {
 			String exePath = "C:\\firefox\\geckodriver.exe";
 			System.setProperty("webdriver.gecko.driver", exePath);
@@ -104,86 +112,91 @@ public class ControllerInicio {
 			driver.get("https://www.amazon.es/");
 			// BUSCADOR
 			WebElement buscadorAmazon = driver.findElement(By.id("twotabsearchtextbox"));
-			// CADENA DE Bï¿½SQUEDA
+			// CADENA DE BUSQUEDA
 			String busqueda = marca + " " + modelo;
 			buscadorAmazon.sendKeys(busqueda);
 			buscadorAmazon.submit();
 			// ESPERA
 			WebDriverWait waiting = new WebDriverWait(driver, 10);
 			waiting.until(ExpectedConditions.presenceOfElementLocated(By.className("a-last")));
-			// Tï¿½TULO DE RESPUESTA
-			System.out.println("Titulo de la pï¿½gina " + driver.getTitle());
+			// TITULO DE RESPUESTA
+			System.out.println("Titulo de la pagina " + driver.getTitle());
 
-			//ELEMENTOS
-			List<WebElement> listaElementos = driver
-					.findElements(By.xpath("//*[contains(@class, 's-result-item')]"));
+			// ELEMENTOS
+			List<WebElement> listaElementos = driver.findElements(By.xpath("//*[contains(@class, 's-result-item')]"));
 
 			System.out.println("Numero de elementos de la lista: " + listaElementos.size());
-			String nombre="";
-			String precioActual="";
-			String precioAnterior="";
-			String vendedor= "Amazon";
+			String nombre = "";
+			String precio = "";
+			String precioAux = "";
+			String vendedor = "Amazon";
 			int j = 1;
 			for (int i = 0; i < listaElementos.size(); i++) {
 				try {
 					nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
-					precioActual = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price']")).getText();
-					precioActAmazon= Double.parseDouble(precioActual.replace("€", "").replace(",","."));
-					//System.out.println("Nombre:" + nombre + ", Precio:" + precio);
+					precio = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price']")).getText();
+					precioActAmazon = Double.parseDouble(precio.replace("ï¿½", "").replace(",", "."));
 					try {
 						nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
-						precioAnterior = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price a-text-price']")).getText();
-						//System.out.println("Nombre:" + nombre + ", Precio:" + precioAnterior);
-					}catch(Exception e) {
+						precio = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price a-text-price']"))
+								.getText();
+					} catch (Exception e) {
 						nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
-						precioAnterior=precioActual;
-						precioAntAmazon= Double.parseDouble(precioAnterior.replace("€", "").replace(",","."));
-						//System.out.println("Nombre:" + nombre + ", Precio:" + precioAnterior);
+						precioAux = precio;
+						precioAntAmazon = Double.parseDouble(precioAux.replace("ï¿½", "").replace(",", "."));
 					}
-				}catch(Exception e) {
-					precioActual=listaElementos.get(i).findElement(By.cssSelector("span[class='a-color-base']")).getText();
-					precioAnterior=precioActual;
-					precioAntAmazon= Double.parseDouble(precioAnterior.replace("€", "").replace(",","."));
+				} catch (Exception e) {
+					precio = listaElementos.get(i).findElement(By.cssSelector("span[class='a-color-base']")).getText();
+					precioAux = precio;
+					precioAntAmazon = Double.parseDouble(precioAux.replace("ï¿½", "").replace(",", "."));
 				}
-				
-					if(nombre.trim().toLowerCase().contains(modelo.toLowerCase()) && nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
-						if(precioAntAmazon > 50 && precioActAmazon>50) {
-							//Smartphone smart = new Smartphone(nombre, precioActual, precioAnterior, vendedor);
-							//smartphones.add(smart);
-						}
+				if (nombre.trim().toLowerCase().contains(modelo.toLowerCase())
+						&& nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
+					if (precioAntAmazon > 50 && precioActAmazon > 50) {
+						Smartphone smart = new Smartphone(nombre, precio, vendedor);
+						smartphones.add(smart);
+						// PRUEBAS
+						/*System.out.println(contAmazon + ": " + "Nombre: " + nombre + ", Vendedor:" + vendedor
+								+ ", Precio: " + precio);
+						contAmazon++;*/
 					}
-					j++;
+				}
+				j++;
 			}
 			
 			llenarTabla();
 
 		}
+		int contFNAC = 1;
 		if (fnacCheck.isSelected()) {
 			String exePath = "C:\\firefox\\geckodriver.exe";
 			System.setProperty("webdriver.gecko.driver", exePath);
 			WebDriver driver = new FirefoxDriver();
 			driver.get("https://www.fnac.es/");
-			//CERRAR COOKIES
-			WebElement ventanaCookies =	driver.findElement(By.xpath("/html/body/aside/div/button"));
-			if (ventanaCookies != null)	{System.out.println("Detectado caja de cookies");
-			ventanaCookies.click();}
-			//BUSCADOR
+			// CERRAR COOKIES
+			WebElement ventanaCookies = driver.findElement(By.xpath("/html/body/aside/div/button"));
+			if (ventanaCookies != null) {
+				System.out.println("Detectado caja de cookies");
+				ventanaCookies.click();
+			}
+			// BUSCADOR
 			WebElement buscadorFnac = driver.findElement(By.id("Fnac_Search"));
-			//CADENA DE BUSQUEDA
-			String busqueda = "smartphone "  +  marca + " " + modelo;
+			// CADENA DE BUSQUEDA
+			String busqueda = "smartphone " + marca + " " + modelo;
 			buscadorFnac.sendKeys(busqueda);
 			buscadorFnac.submit();
-			//ESPERA
+			// ESPERA
 			WebDriverWait waiting;
 			waiting = new WebDriverWait(driver, 10);
-			waiting.until( ExpectedConditions.presenceOfElementLocated(
-		    By.xpath("/html/body/div[3]/div/div[16]/footer/div[2]/div[1]/div[4]/div/ul[2]")));
-			//TITULO PAGINA
+			waiting.until(ExpectedConditions.presenceOfElementLocated(
+					By.xpath("/html/body/div[3]/div/div[16]/footer/div[2]/div[1]/div[4]/div/ul[2]")));
+			// TITULO PAGINA
 			System.out.println("Titulo de la pagina " + driver.getTitle());
-			//BUSCANDO ELEMENTOS
-			List<WebElement> listaElementos = driver.findElements(By.xpath("//*[contains(@class, 'Article-itemGroup')]"));
+			// BUSCANDO ELEMENTOS
+			List<WebElement> listaElementos = driver
+					.findElements(By.xpath("//*[contains(@class, 'Article-itemGroup')]"));
 			System.out.println("Numero de elementos de la lista: " + listaElementos.size());
-			//DATOS
+			// DATOS
 			String nombre = "";
 			String precio = "";
 			String vendedor = "FNAC";
@@ -191,34 +204,44 @@ public class ControllerInicio {
 			Thread.sleep(1000);
 			for (int i = 0; i < listaElementos.size(); i++) {
 				try {
-				precio = listaElementos.get(i).findElement(By.xpath(
-						"/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[3]/div/div/div/div/div[1]/a/strong"))
-						.getText();
-				nombre= listaElementos.get(i).findElement(By.xpath("/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[2]/div/p[1]/a")).getText();
-				precioFNAC= Double.parseDouble(precio.replace("€", "").replace(",","."));
-				}catch(Exception e) {
-					
-					precio = listaElementos.get(i).findElement(By.xpath(
-							"/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[3]/div/div/div/div[1]/a/strong"))
+					precio = listaElementos.get(i).findElement(By.xpath("/html/body/div[3]/div/div[7]/div/div[" + j
+							+ "]/article/div[3]/div/div/div/div/div[1]/a/strong")).getText();
+					nombre = listaElementos.get(i)
+							.findElement(By
+									.xpath("/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[2]/div/p[1]/a"))
 							.getText();
-					nombre= listaElementos.get(i).findElement(By.xpath("/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[2]/div/p[1]/a")).getText();
-					precioFNAC= Double.parseDouble(precio.replace("€", "").replace(",","."));
-					
+					precioFNAC = Double.parseDouble(precio.replace("ï¿½", "").replace(",", "."));
+				} catch (Exception e) {
+
+					precio = listaElementos.get(i).findElement(By.xpath("/html/body/div[3]/div/div[7]/div/div[" + j
+							+ "]/article/div[3]/div/div/div/div[1]/a/strong")).getText();
+					nombre = listaElementos.get(i)
+							.findElement(By
+									.xpath("/html/body/div[3]/div/div[7]/div/div[" + j + "]/article/div[2]/div/p[1]/a"))
+							.getText();
+					precioFNAC = Double.parseDouble(precio.replace("ï¿½", "").replace(",", "."));
+
 				}
-				if(nombre.trim().toLowerCase().contains(modelo.toLowerCase()) && nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
-					if(precioFNAC > 50) {
+
+				if (nombre.trim().toLowerCase().contains(modelo.toLowerCase())
+						&& nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
+					if (precioFNAC > 50) {
 						Smartphone smart = new Smartphone(nombre, precio, vendedor);
 						smartphones.add(smart);
-						//System.out.println(j+": " + nombre +"      " +precio);
+						// PRUEBAS
+						/*System.out.println(contFNAC + ": " + "Nombre: " + nombre + ", Vendedor: " + vendedor
+								+ ", Precio: " + precio);
+						contFNAC++;*/
 					}
 				}
-				
+
 				j++;
 			}
 			
 			llenarTabla();
 
 		}
+		int contPc = 1;
 		if (pcComponentsCheck.isSelected()) {
 			String exePath = "C:\\firefox\\geckodriver.exe";
 			System.setProperty("webdriver.gecko.driver", exePath);
@@ -232,8 +255,7 @@ public class ControllerInicio {
 			buscadorGoogle.submit();
 			// CONDICION ESPERA
 			WebDriverWait waiting = new WebDriverWait(driver, 4000);
-			waiting.until(
-					ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@class, 'ais-Hits')]")));
+			waiting.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@class, 'ais-Hits')]")));
 
 			waitForPageLoaded(driver);
 
@@ -241,7 +263,7 @@ public class ControllerInicio {
 			Thread.sleep(4000);
 			List<WebElement> listaElementos = driver.findElements(By.xpath("//*[contains(@class, 'ais-Hits')]"));
 
-			System.out.println("Nï¿½mero de elementos de la lista: " + listaElementos.size());
+			System.out.println("Numero de elementos de la lista: " + listaElementos.size());
 			// ARTICULOS
 			String precio = "";
 
@@ -253,22 +275,26 @@ public class ControllerInicio {
 			}
 
 			int j = 1;
-			String nombreTelf = "";
+			String nombre = "";
 			String vendedor = "Pc Componentes";
 			for (int i = 0; i < k; i++) {
-				precio = listaElementos.get(i).findElement(By.xpath(
-						"/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[3]"))
+				precio = listaElementos.get(i).findElement(By
+						.xpath("/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[3]"))
 						.getText();
-				precioActPcComponentes = Double.parseDouble(precio.replace("€", "").replace(",", "."));
-				nombreTelf = listaElementos.get(i).findElement(By.xpath("/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[1]")).getText();
-				
-				
-				if (nombreTelf.trim().toLowerCase().contains(modelo.toLowerCase())
-						&& nombreTelf.trim().toLowerCase().contains(marca.toLowerCase())) {
+				precioActPcComponentes = Double.parseDouble(precio.replace("ï¿½", "").replace(",", "."));
+				nombre = listaElementos.get(i).findElement(By
+						.xpath("/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[1]"))
+						.getText();
+
+				if (nombre.trim().toLowerCase().contains(modelo.toLowerCase())
+						&& nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
 					if (precioActPcComponentes > 50.0) {
-						// System.out.println(precioActPcComponentes);
-						Smartphone smart = new Smartphone(nombreTelf, precio, vendedor);
+						Smartphone smart = new Smartphone(nombre, precio, vendedor);
 						smartphones.add(smart);
+						// PRUEBAS
+						/*System.out.println(contPc + ": " + "Nombre: " + nombre + ", Vendedor: " + vendedor
+								+ ", Precio: " + precio);
+						contPc++;*/
 					}
 				}
 				j++;
@@ -290,7 +316,7 @@ public class ControllerInicio {
 			WebDriverWait wait = new WebDriverWait(driver, 30);
 			wait.until(expectation);
 		} catch (Throwable error) {
-			//System.out.println("Timeout waiting for Page Load Request to complete.");
+			// System.out.println("Timeout waiting for Page Load Request to complete.");
 		}
 	}
 	
