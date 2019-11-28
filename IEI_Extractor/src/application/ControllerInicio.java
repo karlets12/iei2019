@@ -41,6 +41,14 @@ public class ControllerInicio {
 	private CheckBox pcComponentsCheck;
 	@FXML
 	private Button buttonBuscar;
+	@FXML
+	private TableView<Smartphone> tabla;
+	@FXML
+	private TableColumn<String,Smartphone> ColNombre;
+	@FXML
+	private TableColumn<String,Smartphone> ColPrecio;
+	@FXML
+	private TableColumn<String,Smartphone> ColVendedor;
 
 	protected Stage stage;
 
@@ -55,6 +63,7 @@ public class ControllerInicio {
 	public double precioAntPcComponentes;
 	public double precioActFNAC;
 	public double precioAntFNAC;
+	private ObservableList<Smartphone> listaSmartphones = FXCollections.observableArrayList();
 
 	public void initialize() {
 		stage = new Stage(StageStyle.DECORATED);
@@ -261,5 +270,9 @@ public class ControllerInicio {
 		} catch (Throwable error) {
 			//System.out.println("Timeout waiting for Page Load Request to complete.");
 		}
+	}
+	
+	public static void llenarTabla(ObservableList<Smartphone> listaSmartphone) {
+		
 	}
 }
