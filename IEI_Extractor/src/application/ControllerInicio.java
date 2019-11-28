@@ -59,7 +59,6 @@ public class ControllerInicio {
 		stage = new Stage(StageStyle.DECORATED);
 		stage.setTitle("BUSCADOR");
 		cargarComboMarcas();
-		// obtener el valor del combo:
 	}
 
 	private void cargarComboMarcas() {
@@ -87,65 +86,65 @@ public class ControllerInicio {
 
 
 	 public void compruebaCheckBox(String marca, String modelo) throws InterruptedException {
-		if (amazonCheck.isSelected()) {
-			String exePath = "C:\\firefox\\geckodriver.exe";
-			System.setProperty("webdriver.gecko.driver", exePath);
-			WebDriver driver = new FirefoxDriver();
-			driver.get("https://www.amazon.es/");
-			// BUSCADOR
-			WebElement buscadorAmazon = driver.findElement(By.id("twotabsearchtextbox"));
-			// CADENA DE Bï¿½SQUEDA
-			String busqueda = marca + " " + modelo;
-			buscadorAmazon.sendKeys(busqueda);
-			buscadorAmazon.submit();
-			// ESPERA
-			WebDriverWait waiting = new WebDriverWait(driver, 10);
-			waiting.until(ExpectedConditions.presenceOfElementLocated(By.className("a-last")));
-			// Tï¿½TULO DE RESPUESTA
-			System.out.println("Titulo de la pï¿½gina " + driver.getTitle());
+		 int contAmazon=1;
+		 if (amazonCheck.isSelected()) {
+				String exePath = "C:\\firefox\\geckodriver.exe";
+				System.setProperty("webdriver.gecko.driver", exePath);
+				WebDriver driver = new FirefoxDriver();
+				driver.get("https://www.amazon.es/");
+				// BUSCADOR
+				WebElement buscadorAmazon = driver.findElement(By.id("twotabsearchtextbox"));
+				// CADENA DE BUSQUEDA
+				String busqueda = marca + " " + modelo;
+				buscadorAmazon.sendKeys(busqueda);
+				buscadorAmazon.submit();
+				// ESPERA
+				WebDriverWait waiting = new WebDriverWait(driver, 10);
+				waiting.until(ExpectedConditions.presenceOfElementLocated(By.className("a-last")));
+				// TITULO DE RESPUESTA
+				System.out.println("Titulo de la pagina " + driver.getTitle());
 
-			//ELEMENTOS
-			List<WebElement> listaElementos = driver
-					.findElements(By.xpath("//*[contains(@class, 's-result-item')]"));
+				//ELEMENTOS
+				List<WebElement> listaElementos = driver
+						.findElements(By.xpath("//*[contains(@class, 's-result-item')]"));
 
-			System.out.println("Numero de elementos de la lista: " + listaElementos.size());
-			String nombre="";
-			String precioActual="";
-			String precioAnterior="";
-			String vendedor= "Amazon";
-			int j = 1;
-			for (int i = 0; i < listaElementos.size(); i++) {
-				try {
-					nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
-					precioActual = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price']")).getText();
-					precioActAmazon= Double.parseDouble(precioActual.replace("€", "").replace(",","."));
-					//System.out.println("Nombre:" + nombre + ", Precio:" + precio);
+				System.out.println("Numero de elementos de la lista: " + listaElementos.size());
+				String nombre="";
+				String precio="";
+				String precioAux="";
+				String vendedor= "Amazon";
+				int j = 1;
+				for (int i = 0; i < listaElementos.size(); i++) {
 					try {
 						nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
-						precioAnterior = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price a-text-price']")).getText();
-						//System.out.println("Nombre:" + nombre + ", Precio:" + precioAnterior);
-					}catch(Exception e) {
-						nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
-						precioAnterior=precioActual;
-						precioAntAmazon= Double.parseDouble(precioAnterior.replace("€", "").replace(",","."));
-						//System.out.println("Nombre:" + nombre + ", Precio:" + precioAnterior);
-					}
-				}catch(Exception e) {
-					precioActual=listaElementos.get(i).findElement(By.cssSelector("span[class='a-color-base']")).getText();
-					precioAnterior=precioActual;
-					precioAntAmazon= Double.parseDouble(precioAnterior.replace("€", "").replace(",","."));
-				}
-				
-					if(nombre.trim().toLowerCase().contains(modelo.toLowerCase()) && nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
-						if(precioAntAmazon > 50 && precioActAmazon>50) {
-							//Smartphone smart = new Smartphone(nombre, precioActual, precioAnterior, vendedor);
-							//smartphones.add(smart);
+						precio = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price']")).getText();
+						precioActAmazon= Double.parseDouble(precio.replace("€", "").replace(",","."));
+						try {
+							nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
+							precio = listaElementos.get(i).findElement(By.cssSelector("span[class='a-price a-text-price']")).getText();
+						}catch(Exception e) {
+							nombre = listaElementos.get(i).findElement(By.cssSelector("span.a-text-normal")).getText();
+							precioAux=precio;
+							precioAntAmazon= Double.parseDouble(precioAux.replace("€", "").replace(",","."));
 						}
+					}catch(Exception e) {
+						precio=listaElementos.get(i).findElement(By.cssSelector("span[class='a-color-base']")).getText();
+						precioAux=precio;
+						precioAntAmazon= Double.parseDouble(precioAux.replace("€", "").replace(",","."));
 					}
-					j++;
-			}
+						if(nombre.trim().toLowerCase().contains(modelo.toLowerCase()) && nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
+							if(precioAntAmazon > 50 && precioActAmazon>50) {
+								Smartphone smart = new Smartphone(nombre, precio, vendedor);
+								smartphones.add(smart);
+								//System.out.println(contAmazon + ": " + "Nombre: " + nombre + ", Precio: " + precio);
+								//contAmazon++;
+							}
+						}
+						j++;
+				}
 
-		}
+			}
+		int contFNAC=1;
 		if (fnacCheck.isSelected()) {
 			String exePath = "C:\\firefox\\geckodriver.exe";
 			System.setProperty("webdriver.gecko.driver", exePath);
@@ -193,11 +192,13 @@ public class ControllerInicio {
 					precioFNAC= Double.parseDouble(precio.replace("€", "").replace(",","."));
 					
 				}
+				
 				if(nombre.trim().toLowerCase().contains(modelo.toLowerCase()) && nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
 					if(precioFNAC > 50) {
 						Smartphone smart = new Smartphone(nombre, precio, vendedor);
 						smartphones.add(smart);
-						//System.out.println(j+": " + nombre +"      " +precio);
+						//System.out.println(contFNAC + ": " + "Nombre: " + nombre + ", Precio: " + precio);
+						//contFNAC++;
 					}
 				}
 				
@@ -205,6 +206,7 @@ public class ControllerInicio {
 			}
 
 		}
+		int contPc=1;
 		if (pcComponentsCheck.isSelected()) {
 			String exePath = "C:\\firefox\\geckodriver.exe";
 			System.setProperty("webdriver.gecko.driver", exePath);
@@ -239,22 +241,23 @@ public class ControllerInicio {
 			}
 
 			int j = 1;
-			String nombreTelf = "";
+			String nombre = "";
 			String vendedor = "Pc Componentes";
 			for (int i = 0; i < k; i++) {
 				precio = listaElementos.get(i).findElement(By.xpath(
 						"/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[3]"))
 						.getText();
 				precioActPcComponentes = Double.parseDouble(precio.replace("€", "").replace(",", "."));
-				nombreTelf = listaElementos.get(i).findElement(By.xpath("/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[1]")).getText();
+				nombre = listaElementos.get(i).findElement(By.xpath("/html/body/header/div[3]/div[2]/section/div[2]/div[2]/ol/li[" + j + "]/div/div/div[1]")).getText();
 				
 				
-				if (nombreTelf.trim().toLowerCase().contains(modelo.toLowerCase())
-						&& nombreTelf.trim().toLowerCase().contains(marca.toLowerCase())) {
+				if (nombre.trim().toLowerCase().contains(modelo.toLowerCase())
+						&& nombre.trim().toLowerCase().contains(marca.toLowerCase())) {
 					if (precioActPcComponentes > 50.0) {
-						// System.out.println(precioActPcComponentes);
-						Smartphone smart = new Smartphone(nombreTelf, precio, vendedor);
+						Smartphone smart = new Smartphone(nombre, precio, vendedor);
 						smartphones.add(smart);
+						System.out.println(contPc + ": " + "Nombre: " + nombre + ", Precio: " + precio);
+						contPc++;
 					}
 				}
 				j++;
